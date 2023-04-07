@@ -34,6 +34,7 @@ def test_check_card():
 
     response = requests.get(f'{url}cards', headers=headers)
 
+    #! 
     last_card = response.json()["data"]["data"][0]
 
     #print(last_card)
@@ -41,4 +42,37 @@ def test_check_card():
     assert last_card["title"] == "new-card"
     assert last_card["color"] != "34a97b"
 
+
+#PATCH METHOD (Changing the column of the created card)
+def test_change_column():
+
+    response = requests.get(f'{url}cards', headers=headers)
+
+    #! 
+    last_card = response.json()["data"]["data"][0]
+
+    #print(last_card)
+
+    last_card_id = last_card["card_id"]
+
+    payload = {
+        "column_id": 3,
+        "workflow_id": 1,
+        }
+
+    response = requests.patch(f'{url}cards/{last_card_id}', headers=headers, json=payload)
+
     
+    response = requests.get(f'{url}cards', headers=headers)
+
+    #! 
+    last_card = response.json()["data"]["data"][0]
+    #print(last_card)
+
+    assert last_card["column_id"] == 3, "Card column ID should be 3"
+
+
+
+test_new_card()
+test_check_card()
+test_change_column()
