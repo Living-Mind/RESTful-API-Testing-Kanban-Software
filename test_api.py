@@ -85,9 +85,49 @@ def test_change_false_column():
     assert response.status_code == 200, f"Status Code: {response.status_code}"
 
 
-test_new_card()
-test_check_card()
-test_change_column()
-test_change_false_column()
+# PATCH METHOD (Creating a subtask to an existing card)
+def test_create_subtask():
+
+    payload = {
+        "subtasks_to_add": 
+        [
+            {
+          "description": "Subtask Creation Test"
+          }
+          ]
+    }
+
+    response = requests.patch(f'{url}cards/{last_card()["card_id"]}', headers=headers, json=payload)
+
+    assert response.status_code == 200, f"Status Code: {response.status_code}"
 
 
+# PATCH METHOD (Converting a subtask to a card in "Requested" column)
+def test_convert_to_link_card():
+
+    response = requests.get(f'{url}cards/{last_card()["card_id"]}', headers=headers)
+
+    subtask_id = response.json()["data"]["subtasks"][0]["subtask_id"]
+
+    payload = {
+
+    "subtasks_to_convert_into_cards": [
+        {
+            "subtask_id": f'{subtask_id}',
+            "column_id": 2,
+            "links_to_existing_cards_to_add_or_update": [ 
+                {
+
+                    "linked_card_id": f'{last_card()["card_id"]}',
+                    "link_type": "parent",
+            }
+
+            ]
+        }
+]
+}
+
+    response = requests.patch(f'{url}cards/{last_card()["card_id"]}', headers=headers, json=payload)
+
+    assert response.status_code == 200, f"Status Code: {response.status_code}"
+ 
