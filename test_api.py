@@ -18,8 +18,7 @@ def last_card():
 
     return last_card
 
-
-#POST METHOD (Creating new card)
+# POST METHOD (Creating new card)
 def test_new_card():
     payload = {
         "column_id": 2,
@@ -38,7 +37,7 @@ def test_new_card():
     print(response.json()["data"][0])
 
 
-#GET METHOD (Checking for new card)
+# GET METHOD (Checking for new card)
 def test_check_card():
 
     response = requests.get(f'{url}cards', headers=headers)
@@ -49,7 +48,7 @@ def test_check_card():
     assert last_card()["color"] != "34a97b"
 
 
-#PATCH METHOD (Changing the column of the created card)
+# PATCH METHOD (Changing the column of the created card)
 def test_change_column():
 
     response = requests.get(f'{url}cards', headers=headers)
@@ -73,8 +72,8 @@ def test_change_column():
     assert last_card()["column_id"] == 3, "Card column ID should be 3"
 
 
-# PATCH METHOD (Changing the card to not existing column)
-def test_change_false_column():
+# PATCH METHOD (Validate Error: Changing the card to not existing column)
+def test_VE_change_false_column():
 
     payload = {
         "column_id": 6
@@ -131,3 +130,40 @@ def test_convert_to_link_card():
 
     assert response.status_code == 200, f"Status Code: {response.status_code}"
  
+
+# DELETE METHOD (Deleting a card)
+def test_delete_card():
+
+    response = requests.delete(f'{url}cards/{last_card()["card_id"]}', headers=headers)
+
+    assert response.status_code == 204, f"Status Code: {response.status_code}"
+
+# PATCH METHOD (Validate Error: Changing the size of not existing card)
+def test_VE_size_change():
+
+    payload = {
+        "size": 30
+        }
+
+    response = requests.patch(f'{url}cards/-1', headers=headers, json=payload)
+
+    assert response.status_code == 404, f"Status Code: {response.status_code}"
+
+# POST METHOD (Validate Error: Creating a card with deadline before 1970-01-01)
+def test_VE_card_deadline():
+
+    payload = {
+
+    "column_id": 2,
+    "lane_id": 1,
+    "position": 2,
+    "workflow_id": 1,
+    "title": "Very old card",
+    "priority": 100,
+    "color": "#18f0c1",
+    "deadline": "1950-01-01T11:00:26.848Z"
+}
+
+    response = requests.post(f'{url}/cards', headers=headers, json=payload)
+
+    assert response.status_code == 400, f'Status Code: {response.status_code}'
