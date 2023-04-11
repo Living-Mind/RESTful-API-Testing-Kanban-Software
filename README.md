@@ -1,11 +1,11 @@
 # RESTful API Testing for Kanbanize Software
 
-This repository contains automated tests for the [Kanbanize] (https://kanbanize.com) RESTful API. The tests are implemented using Python and pytest testing framework.
+This repository contains automated tests for the <a href="https://kanbanize.com">Kanbanize</a> RESTful API. The tests are implemented using Python and pytest testing framework.
 
 ## Sources
 
-* [Kanbanize] (https://kanbanize.com)
-* [API documentation] (https://test.kanbanize.com/openapi/) (Swagger UI)
+* <a href="https://kanbanize.com">Kanbanize</a>
+* <a href="https://test.kanbanize.com/openapi/">API documentation</a> (Swagger UI)
 
 ## Requirements
 
